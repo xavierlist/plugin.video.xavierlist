@@ -96,7 +96,7 @@ if REMOTE_DBG:
         sys.exit(1)
 
 
-addon = xbmcaddon.Addon('plugin.video.Xavierlist')
+addon = xbmcaddon.Addon('plugin.video.xavierlist')
 addon_version = addon.getAddonInfo('version')
 profile = xbmc.translatePath(addon.getAddonInfo('profile').decode('utf-8'))
 home = xbmc.translatePath(addon.getAddonInfo('path').decode('utf-8'))
@@ -115,7 +115,7 @@ if os.path.exists(favorites)==True:
     FAV = open(favorites).read()
 else: FAV = []
 
-SOURCES = [{"url": "http://bit.ly/Xavierlistxml", "fanart": "http://i.imgur.com/O4Kz3Al.jpg"}]
+SOURCES = [{"url": "http://bit.ly/xavierlistxml", "fanart": "http://i.imgur.com/O4Kz3Al.jpg"}]
 
 # http://i.imgur.com/GyK9PGj.jpg
 # http://i.imgur.com/eklZFBE.png
@@ -123,7 +123,7 @@ SOURCES = [{"url": "http://bit.ly/Xavierlistxml", "fanart": "http://i.imgur.com/
 
 def addon_log(string):
     if debug == 'true':
-        xbmc.log("[addon.Xavierlist-%s]: %s" %(addon_version, string))
+        xbmc.log("[addon.xavierlist-%s]: %s" %(addon_version, string))
 
 
 def makeRequest(url, headers=None):
@@ -139,11 +139,11 @@ def makeRequest(url, headers=None):
             addon_log('URL: '+url)
             if hasattr(e, 'code'):
                 addon_log('We failed with error code - %s.' % e.code)
-                xbmc.executebuiltin("XBMC.Notification(XavierList,We failed with error code - "+str(e.code)+",10000,"+icon+")")
+                xbmc.executebuiltin("XBMC.Notification(xavierlist,We failed with error code - "+str(e.code)+",10000,"+icon+")")
             elif hasattr(e, 'reason'):
                 addon_log('We failed to reach a server.')
                 addon_log('Reason: %s' %e.reason)
-                xbmc.executebuiltin("XBMC.Notification(XavierList,We failed to reach a server. - "+str(e.reason)+",10000,"+icon+")")
+                xbmc.executebuiltin("XBMC.Notification(xavierlist,We failed to reach a server. - "+str(e.reason)+",10000,"+icon+")")
 
 
 def getSources():
@@ -1753,7 +1753,7 @@ def urlsolver(url):
         else:
             resolver = resolved
     else:
-        xbmc.executebuiltin("XBMC.Notification(XavierList,Urlresolver donot support this domain. - ,5000)")
+        xbmc.executebuiltin("XBMC.Notification(xavierlist,Urlresolver donot support this domain. - ,5000)")
     return resolver
 
 
@@ -1818,12 +1818,12 @@ def play_playlist(name, mu_playlist,queueVideo=None):
 
 def download_file(name, url):
         if addon.getSetting('save_location') == "":
-            xbmc.executebuiltin("XBMC.Notification('XavierList','Choose a location to save files.',15000,"+icon+")")
+            xbmc.executebuiltin("XBMC.Notification('xavierlist','Choose a location to save files.',15000,"+icon+")")
             addon.openSettings()
         params = {'url': url, 'download_path': addon.getSetting('save_location')}
         downloader.download(name, params)
         dialog = xbmcgui.Dialog()
-        ret = dialog.yesno('XavierList', 'Do you want to add this file as a source?')
+        ret = dialog.yesno('xavierlist', 'Do you want to add this file as a source?')
         if ret:
             addSource(os.path.join(addon.getSetting('save_location'), name))
 
@@ -1877,7 +1877,7 @@ def addDir(name,url,mode,iconimage,fanart,description,genre,date,credits,showcon
                 contextMenu.append(('Download','XBMC.RunPlugin(%s?url=%s&mode=9&name=%s)'
                                     %(sys.argv[0], urllib.quote_plus(url), urllib.quote_plus(name))))
             elif showcontext == 'fav':
-                contextMenu.append(('Remove from XavierList Favorites','XBMC.RunPlugin(%s?mode=6&name=%s)'
+                contextMenu.append(('Remove from xavierlist Favorites','XBMC.RunPlugin(%s?mode=6&name=%s)'
                                     %(sys.argv[0], urllib.quote_plus(name))))
             if showcontext == '!!update':
                 fav_params2 = (
@@ -1886,7 +1886,7 @@ def addDir(name,url,mode,iconimage,fanart,description,genre,date,credits,showcon
                     )
                 contextMenu.append(('[COLOR yellow]!!update[/COLOR]','XBMC.RunPlugin(%s)' %fav_params2))
             if not name in FAV:
-                contextMenu.append(('Add to XavierList Favorites','XBMC.RunPlugin(%s?mode=5&name=%s&url=%s&iconimage=%s&fanart=%s&fav_mode=%s)'
+                contextMenu.append(('Add to xavierlist Favorites','XBMC.RunPlugin(%s?mode=5&name=%s&url=%s&iconimage=%s&fanart=%s&fav_mode=%s)'
                          %(sys.argv[0], urllib.quote_plus(name), urllib.quote_plus(url), urllib.quote_plus(iconimage), urllib.quote_plus(fanart), mode)))
             liz.addContextMenuItems(contextMenu)
         ok=xbmcplugin.addDirectoryItem(handle=int(sys.argv[1]),url=u,listitem=liz,isFolder=True)
@@ -2059,7 +2059,7 @@ def addLink(url,name,iconimage,fanart,description,genre,date,showcontext,playlis
             contextMenu = []
             if showcontext == 'fav':
                 contextMenu.append(
-                    ('Remove from XavierList Favorites','XBMC.RunPlugin(%s?mode=6&name=%s)'
+                    ('Remove from xavierlist Favorites','XBMC.RunPlugin(%s?mode=6&name=%s)'
                      %(sys.argv[0], urllib.quote_plus(name)))
                      )
             elif not name in FAV:
@@ -2071,7 +2071,7 @@ def addLink(url,name,iconimage,fanart,description,genre,date,showcontext,playlis
                     fav_params += 'playlist='+urllib.quote_plus(str(playlist).replace(',','||'))
                 if regexs:
                     fav_params += "&regexs="+regexs
-                contextMenu.append(('Add to XavierList Favorites','XBMC.RunPlugin(%s)' %fav_params))
+                contextMenu.append(('Add to xavierlist Favorites','XBMC.RunPlugin(%s)' %fav_params))
             liz.addContextMenuItems(contextMenu)
         if not playlist is None:
             if addon.getSetting('add_playlist') == "false":
@@ -2294,14 +2294,14 @@ elif mode==17:
     if url:
         playsetresolved(url,name,iconimage,setresolved)
     else:
-        xbmc.executebuiltin("XBMC.Notification(XavierList,Failed to extract regex. - "+"this"+",4000,"+icon+")")
+        xbmc.executebuiltin("XBMC.Notification(xavierlist,Failed to extract regex. - "+"this"+",4000,"+icon+")")
 
 elif mode==18:
     addon_log("youtubedl")
     try:
         import youtubedl
     except Exception:
-        xbmc.executebuiltin("XBMC.Notification(XavierList,Please [COLOR yellow]install Youtube-dl[/COLOR] module ,10000,"")")
+        xbmc.executebuiltin("XBMC.Notification(xavierlist,Please [COLOR yellow]install Youtube-dl[/COLOR] module ,10000,"")")
     stream_url=youtubedl.single_YD(url)
     playsetresolved(stream_url,name,iconimage)
 
